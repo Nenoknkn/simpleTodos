@@ -1,81 +1,54 @@
-
-
 import { Template } from 'meteor/templating';
-
- 
-
-import './body.html';
-
- 
-
-Template.body.helpers({
-
-  tasks: [
-
-    { text: 'This is task 1' },
-
-    { text: 'This is task 2' },
-
-    { text: 'This is task 3' },
-
-  ],
-
-});
-
-
-
 
 import { Tasks } from '../api/tasks.js';
 
- 
-
+import './task.js';
 import './body.html';
 
- 
 
 Template.body.helpers({
 
-  tasks() {
+    tasks() {
+    	// Show newest tasks at the top
+    	return Tasks.find({}, { sort: { createdAt: -1 } } );
 
-    return Tasks.find({});
-
-  },
+    },
 
 });
+
 Template.body.events({
 
-  'submit .new-task'(event) {
+    'submit .new-task' (event) {
 
-    // Prevent default browser form submit
+        // Prevent default browser form submit
 
-    event.preventDefault();
+        event.preventDefault();
 
- 
 
-    // Get value from form element
 
-    const target = event.target;
+        // Get value from form element
 
-    const text = target.text.value;
+        const target = event.target;
 
- 
+        const text = target.text.value;
 
-    // Insert a task into the collection
+// Insert a task into the collection
 
-    Tasks.insert({
+Tasks.insert({
 
-      text,
+    text,
 
-      createdAt: new Date(), // current time
+    createdAt: new Date(), // current time
 
-    });
+});
 
- 
 
-    // Clear form
 
-    target.text.value = '';
+// Clear form
 
-  },
+target.text.value = '';
+
+
+    },
 
 });
